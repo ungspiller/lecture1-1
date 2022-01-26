@@ -1,8 +1,9 @@
 
 import * as React from "react";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import * as ReactDOM from "react-dom";
-import {Routes, Route, Link, BrowserRouter, useLocation, useNavigate} from "react-router-dom";
+import {Routes, Route, Link, BrowserRouter, useNavigate} from "react-router-dom";
+
 
 const movies = [
     {
@@ -27,7 +28,17 @@ function FrontPage() {
     </div>;
 }
 
-function ListMovies({movies}) {
+function ListMovies({moviesApi}) {
+    const [movies, setMovies] = useState();
+    useEffect(async () => {
+        setMovies(undefined);
+        setMovies(await moviesApi.listMovies());
+    }, []);
+
+    if (!movies) {
+        return <div>Loading...</div>
+    }
+
     return <div>
         <h1>List movies</h1>
             {movies.map(m =>
@@ -39,16 +50,16 @@ function ListMovies({movies}) {
     </div>;
 }
 
-function NewMovie({onAddMovie}) {
+function NewMovie({moviesApi}) {
     const [title, setTitle] = useState("");
     const [year, setYear] = useState("");
     const [plot, setPlot] = useState("");
 
     const navigate = useNavigate();
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
-        onAddMovie({title, year, plot});
+        await moviesApi.onAddMovie({title, year, plot});
         navigate("/");
     }
 
@@ -68,11 +79,16 @@ function NewMovie({onAddMovie}) {
 }
 
 function Application() {
+    const moviesApi = {
+        onAddMovie: async (m) => movies.push(m),
+        listMovies: async () => movies
+    }
+
     return <BrowserRouter>
         <Routes>
             <Route path={"/"} element={<FrontPage />}/>
-            <Route path={"/movies/new"} element={<NewMovie onAddMovie={m => movies.push(m)}/>}/>
-            <Route path={"/movies"} element={<ListMovies movies={movies}/>}/>
+            <Route path={"/movies/new"} element={<NewMovie moviesApi={moviesApi}/>}/>
+            <Route path={"/movies"} element={<ListMovies moviesApi={moviesApi}/>}/>
         </Routes>
     </BrowserRouter>
 ;
