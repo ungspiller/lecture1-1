@@ -19,5 +19,8 @@
   "homepage": "https://github.com/ungspiller/lecture1-1#readme",
   "devDependencies": {
     "parcel": "^2.2.1"
+  },
+  "dependencies": {
+    "react-dom": "^17.0.2"
   }
 }
