@@ -1,11 +1,10 @@
-
 import * as React from "react";
 import {useState, useEffect} from "react";
 import * as ReactDOM from "react-dom";
 import {Routes, Route, Link, BrowserRouter, useNavigate} from "react-router-dom";
 
 
-const movies = [
+const MOVIES = [
     {
         title: "The Matrix",
         plot: "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
@@ -17,6 +16,7 @@ const movies = [
         year: 1985
     }
 ];
+
 
 function FrontPage() {
     return <div>
@@ -31,6 +31,7 @@ function FrontPage() {
 function ListMovies({moviesApi}) {
     const [movies, setMovies] = useState();
     useEffect(async () => {
+        console.log("hei");
         setMovies(undefined);
         setMovies(await moviesApi.listMovies());
     }, []);
@@ -41,12 +42,12 @@ function ListMovies({moviesApi}) {
 
     return <div>
         <h1>List movies</h1>
-            {movies.map(m =>
+        {movies.map(m =>
             <div key={m.title}>
                 <h2>{m.title} ({m.year})</h2>
                 <div>{m.plot}</div>
             </div>
-            )}
+        )}
     </div>;
 }
 
@@ -57,6 +58,7 @@ function NewMovie({moviesApi}) {
 
     const navigate = useNavigate();
 
+
     async function handleSubmit(e) {
         e.preventDefault();
         await moviesApi.onAddMovie({title, year, plot});
@@ -66,13 +68,13 @@ function NewMovie({moviesApi}) {
     return <form onSubmit={handleSubmit}>
         <h1>New movie</h1>
         <div>
-            <label>Title: <input value={title} onChange={e => setTitle(e.target.value)}/></label>
+            <label>Title: <input value={title} onChange={e => setTitle(e.target.value)} /></label>
         </div>
         <div>
-            <label>Year: <input value={year} onChange={e => setYear(e.target.value)}/></label>
+            <label>Year: <input value={year} onChange={e => setYear(e.target.value)} /></label>
         </div>
         <div>
-            <label>Plot: <textarea value={plot} onChange={e => setPlot(e.target.value)}/></label>
+            <label>Plot: <textarea value={plot} onChange={e => setPlot(e.target.value)} /></label>
         </div>
         <button>Submit</button>
     </form>;
@@ -80,18 +82,20 @@ function NewMovie({moviesApi}) {
 
 function Application() {
     const moviesApi = {
-        onAddMovie: async (m) => movies.push(m),
-        listMovies: async () => movies
+        onAddMovie: async (m) =>  MOVIES.push(m),
+        listMovies: async () => {
+            const res = await fetch("/api/movies");
+            return res.json();
+        }
     }
 
     return <BrowserRouter>
         <Routes>
-            <Route path={"/"} element={<FrontPage />}/>
-            <Route path={"/movies/new"} element={<NewMovie moviesApi={moviesApi}/>}/>
-            <Route path={"/movies"} element={<ListMovies moviesApi={moviesApi}/>}/>
+            <Route path="/" element={<FrontPage/>}/>
+            <Route path="/movies/new" element={<NewMovie moviesApi={moviesApi}/>}/>
+            <Route path="/movies" element={<ListMovies moviesApi={moviesApi}/>}/>
         </Routes>
-    </BrowserRouter>
-;
+    </BrowserRouter>;
 }
 
 ReactDOM.render(
