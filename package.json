@@ -2,14 +2,18 @@
   "name": "lecture1-1",
   "version": "1.0.0",
   "description": "",
+  "main": "index.js",
   "scripts": {
-    "dev": "parcel index.html",
+    "dev": "concurrently npm:dev:server npm:dev:client",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd server && npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ungspiller/lecture1-1.git"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -17,11 +21,6 @@
   },
   "homepage": "https://github.com/ungspiller/lecture1-1#readme",
   "devDependencies": {
-    "parcel": "^2.2.1"
-  },
-  "dependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^6.2.1"
+    "concurrently": "^7.0.0"
   }
 }
