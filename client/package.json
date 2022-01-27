@@ -1,9 +1,10 @@
 {
   "name": "lecture1-1",
   "version": "1.0.0",
-  "description": "Test",
+  "description": "## Whirlwind tour of the course",
   "scripts": {
     "dev": "parcel index.html",
+    "build": "parcel build index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,7 +18,7 @@
   },
   "homepage": "https://github.com/ungspiller/lecture1-1#readme",
   "devDependencies": {
-    "parcel": "^2.2.0"
+    "parcel": "^2.1.0"
   },
   "dependencies": {
     "react": "^17.0.2",
